@@ -1,5 +1,8 @@
 <script>
   import { v4 } from "uuid";
+  import Noty from "noty";
+  import "noty/lib/noty.css";
+  import "noty/lib/themes/sunset.css";
 
   let products = [
     {
@@ -49,12 +52,17 @@
   const cleanStatus = () => {
     editStatus.status = false;
     editStatus.id = "";
-  }
+  };
 
   const addProduct = () => {
     const prodId = v4();
     if (!product.category || !product.name || !product.description)
-      return alert(`Can\'t save`);
+      return new Noty({
+        theme: "sunset",
+        type: "warning",
+        timeout: 3000,
+        text: "Product fields cannot be empty!"
+      }).show();
     // console.log(prodId);
     const newProduct = {
       ...product,
@@ -62,7 +70,7 @@
     };
     products = products.concat(newProduct);
     cleanProduct();
-    console.log(products);
+    // console.log(products);
   };
 
   const updateProduct = () => {
@@ -75,10 +83,16 @@
       category: product.category
     };
     const productIndex = products.findIndex(p => p.id == product.id);
-    products[productIndex] = updatedProduct
-    cleanProduct()
-    cleanStatus()
-    console.log(productIndex);
+    products[productIndex] = updatedProduct;
+    new Noty({
+      theme: "sunset",
+      type: "success",
+      timeout: 3000,
+      text: "Product updated successfully!"
+    }).show();
+    cleanProduct();
+    cleanStatus();
+    // console.log(productIndex);
   };
 
   const onSubmitHandler = e => {
@@ -88,11 +102,16 @@
 
   const deleteProduct = productId => {
     products = products.filter(p => p.id != productId);
-
+    new Noty({
+        theme: "sunset",
+        type: "success",
+        timeout: 3000,
+        text: "Product deleted Successfully!"
+      }).show();
     if (productId === editStatus.id) {
       cleanProduct();
     }
-    cleanStatus()
+    cleanStatus();
   };
 
   const editProduct = editedProduct => {
@@ -106,7 +125,7 @@
       cleanProduct();
       editStatus.id = "";
     }
-    console.log(product, editStatus);
+    // console.log(product, editStatus);
   };
 </script>
 
